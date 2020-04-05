@@ -136,6 +136,7 @@ public class Constructor {
         }
         return resultOrder;
     }
+
     static String getOrder(String order) throws SyntaxError {
         if (order.equals("")) {
             return "";

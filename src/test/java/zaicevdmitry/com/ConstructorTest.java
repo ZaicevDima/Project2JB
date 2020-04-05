@@ -2,6 +2,7 @@ package zaicevdmitry.com;
 
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -22,17 +23,17 @@ public class ConstructorTest {
         assertEquals(", {name: 1, surname: 1})", Constructor.getSelect("name, surname"));
     }
 
-    @Test (expected = SyntaxError.class)
+    @Test(expected = SyntaxError.class)
     public void getSelectWithLastComma() throws SyntaxError {
         Constructor.getSelect("name, surname,");
     }
 
-    @Test (expected = SyntaxError.class)
+    @Test(expected = SyntaxError.class)
     public void getSelectWithNotLastComma() throws SyntaxError {
         Constructor.getSelect("name,    surname");
     }
 
-    @Test (expected = SyntaxError.class)
+    @Test(expected = SyntaxError.class)
     public void getSelectWithLastCommaAndSpace() throws SyntaxError {
         Constructor.getSelect("name,  ,surname");
     }
@@ -42,7 +43,7 @@ public class ConstructorTest {
         assertEquals("db.name", Constructor.getFrom("name"));
     }
 
-    @Test (expected = SyntaxError.class)
+    @Test(expected = SyntaxError.class)
     public void getIncorrectFrom() throws SyntaxError {
         Constructor.getFrom("na   me");
     }
@@ -59,12 +60,12 @@ public class ConstructorTest {
         assertEquals(".find({age: {$gt: 22}}", Constructor.getWhere("age > 22"));
     }
 
-    @Test (expected = SyntaxError.class)
+    @Test(expected = SyntaxError.class)
     public void getIncorrectWhereIncorrectOperation() throws SyntaxError {
         Constructor.getWhere("id = 2 AND age != 22 AND name = 'Vasya'");
     }
 
-    @Test (expected = SyntaxError.class)
+    @Test(expected = SyntaxError.class)
     public void getIncorrectWhere() throws SyntaxError {
         Constructor.getWhere("age > = 22 AND name = 'Vasya'");
     }
@@ -109,10 +110,10 @@ public class ConstructorTest {
     @Test
     public void getOrderWithNameWithSpace() throws SyntaxError {
         assertEquals("sort({name 'DE  SC': 1}, {id: 1})",
-        Constructor.getOrder("name 'DE  SC', id ASC"));
+                Constructor.getOrder("name 'DE  SC', id ASC"));
     }
 
-    @Test (expected = SyntaxError.class)
+    @Test(expected = SyntaxError.class)
     public void getOrderSpaceError() throws SyntaxError {
         Constructor.getOrder("name DE  SC, id ASC");
     }
@@ -122,7 +123,7 @@ public class ConstructorTest {
         assertEquals("", Constructor.getGroup(""));
     }
 
-    @Test (expected = SyntaxError.class)
+    @Test(expected = SyntaxError.class)
     public void getGroupNotEmpty() throws SyntaxError {
         Constructor.getGroup("name");
     }

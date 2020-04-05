@@ -12,10 +12,10 @@ public class Parser {
             throw new SyntaxError("Syntax error! Expected SELECT");
         }
         for (int i = 0; i < query.length(); i++) {
-            if ((query.length() -  i > "SELECT ".length()) && query.substring(i).startsWith("SELECT ")) {
+            if ((query.length() - i > "SELECT ".length()) && query.substring(i).startsWith("SELECT ")) {
                 start = i + "SELECT ".length();
             }
-            if ((query.length() -  i > "FROM".length()) && query.substring(i).startsWith("FROM")) {
+            if ((query.length() - i > "FROM".length()) && query.substring(i).startsWith("FROM")) {
                 end = i - 1;
                 break;
             }
@@ -161,8 +161,8 @@ public class Parser {
 
         if ((start > 0) && (start < end) && (query.substring(start, end).charAt(0) != ' ')) {
             return query.substring(start, end);
-        } else if (start > 0 && end == 0  && query.substring (start).length() > 0 && query.substring(start).charAt(0) != ' ') {
-            return query.substring(start) ;
+        } else if (start > 0 && end == 0 && query.substring(start).length() > 0 && query.substring(start).charAt(0) != ' ') {
+            return query.substring(start);
         } else if (start == 0) {
             return "";
         } else {
