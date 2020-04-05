@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="zaicevdmitry.com.ParserTest" tests="41" skipped="0" failures="0" errors="0" timestamp="2020-04-05T20:36:30" hostname="DESKTOP-FF23U9G" time="0.022">
+  <properties/>
+  <testcase name="getWhereExpressionEmpty" classname="zaicevdmitry.com.ParserTest" time="0.002"/>
+  <testcase name="getLimitExpression" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getOrderExpressionWithOffset" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getWhereExpressionWithSpaceWhere" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getOffsetExpressionWithSpaceWhere" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getWhereExpression" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getSelectExpressionErrorSelectExpression" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getFromExpressionWithSpaceTable" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getGroupExpression" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="parseQuery" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getGroupExpressionWithLimit" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getGroupExpressionWithORDER" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getOrderExpressionWithLimit" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getFromExpression" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getOffsetExpression" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getFromExpressionErrorFrom" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getFromExpressionWithOFFSET" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getOrderExpression" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getLimitExpressionEmpty" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getOrderExpressionEmpty" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getGroupExpressionWithOffset" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getLimitExpressionWithOffset" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getFromExpressionWithGROUP" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getFromExpressionWithLIMIT" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getFromExpressionWithORDER" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getFromExpressionWithWHERE" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getOffsetExpressionWithSpaceOffset" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getOffsetExpressionWithLimit" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getOrderExpressionWithSpaceWhere" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getSelectExpressionErrorTwoSelect" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getWhereExpressionWithGroup" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getWhereExpressionWithLimit" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getWhereExpressionWithORDER" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getSelectExpression" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getSelectExpressionErrorSelect" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getOffsetExpressionEmpty" classname="zaicevdmitry.com.ParserTest" time="0.001"/>
+  <testcase name="getLimitExpressionWithSpaceWhere" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getFromExpressionWithEmptyTable" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getWhereExpressionWithOffset" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getGroupExpressionWithSpaceWhere" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <testcase name="getGroupExpressionEmpty" classname="zaicevdmitry.com.ParserTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
