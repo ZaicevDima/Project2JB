@@ -1,22 +1,27 @@
 package zaicevdmitry.com;
 
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 
 public class Parser {
     static String getSelectExpression(String query) throws SyntaxError {
-        int start = 0;
+        int start = "SELECT ".length();
         int end = 0;
-        if (query.length() <= "SELECT".length()) {
+        if (!query.startsWith("SELECT ")) {
             throw new SyntaxError("Syntax error! Expected SELECT");
         }
-        for (int i = 0; i < query.length() - "FROM".length(); i++) {
-            if ((query.length() -  i > "SELECT".length()) && query.substring(0, i).equals("SELECT")) {
-                start = i + 1;
+        for (int i = 0; i < query.length(); i++) {
+            if ((query.length() -  i > "SELECT ".length()) && query.substring(i).startsWith("SELECT ")) {
+                start = i + "SELECT ".length();
             }
-            if ((query.length() -  i > "FROM".length()) && query.substring(i, i + "FROM".length()).equals("FROM")) {
+            if ((query.length() -  i > "FROM".length()) && query.substring(i).startsWith("FROM")) {
                 end = i - 1;
                 break;
             }
+        }
+        if (start > "SELECT ".length()) {
+            throw new SyntaxError("SELECT must be one");
         }
         if (start < end) {
             return query.substring(start, end);
@@ -33,38 +38,38 @@ public class Parser {
         return end;
     }
 
-    static String getFromExpression(String query) throws SyntaxError {
+    private static int[] getStartEnd2(String query, String countOperator, ArrayList<String> operators) {
         int start = 0;
         int end = 0;
-        if (query.length() <= "SELECT".length()) {
-            throw new SyntaxError("Syntax error! Expected SELECT");
-        }
+        boolean flag = false;
         for (int i = 0; i < query.length(); i++) {
-            if (query.length() - i > "FROM".length() && query.substring(i, i + "FROM".length()).equals("FROM")) {
-                start = i + "FROM".length() + 1;
+            if (query.length() - i > countOperator.length() && query.substring(i, i + countOperator.length()).equals(countOperator)) {
+                start = i + countOperator.length() + 1;
             }
-
-            if (start > 0 && getEnd(query, "WHERE", i, end) > 0) {
-                end = getEnd(query, "WHERE", i, end);
-                break;
+            for (String operator : operators) {
+                if (start > 0 && getEnd(query, operator, i, end) > 0) {
+                    end = getEnd(query, operator, i, end);
+                    flag = true;
+                    break;
+                }
             }
-            if (start > 0 && getEnd(query, "GROUP BY", i, end) > 0) {
-                end = getEnd(query, "GROUP BY", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "ORDER BY", i, end) > 0) {
-                end = getEnd(query, "ORDER BY", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "LIMIT", i, end) > 0) {
-                end = getEnd(query, "LIMIT", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "OFFSET", i, end) > 0) {
-                end = getEnd(query, "OFFSET", i, end);
+            if (flag) {
                 break;
             }
         }
+        return new int[]{start, end};
+    }
+
+
+    static String getFromExpression(String query) throws SyntaxError {
+        ArrayList<String> operators = new ArrayList<String>();
+        operators.add("WHERE");
+        operators.add("GROUP BY");
+        operators.add("ORDER BY");
+        operators.add("LIMIT");
+        operators.add("OFFSET");
+        int start = getStartEnd2(query, "FROM", operators)[0];
+        int end = getStartEnd2(query, "FROM", operators)[1];
         if ((start > 0) && (start < end) && (query.substring(start, end).charAt(0) != ' ')) {
             return query.substring(start, end);
         } else if (start > 0 && end == 0 && (query.substring(start).charAt(0) != ' ')) {
@@ -75,34 +80,13 @@ public class Parser {
     }
 
     static String getWhereExpression(String query) throws SyntaxError {
-        int start = 0;
-        int end = 0;
-
-        if (query.length() <= "SELECT".length()) {
-            throw new SyntaxError("Syntax error! Expected SELECT");
-        }
-        for (int i = 0; i < query.length(); i++) {
-            if (query.length() - i > "WHERE".length()  && query.substring(i, i + "WHERE".length()).equals("WHERE")) {
-                start = i + "WHERE".length() + 1;
-            }
-
-            if (start > 0 && getEnd(query, "GROUP BY", i, end) > 0) {
-                end = getEnd(query, "GROUP BY", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "ORDER BY", i, end) > 0) {
-                end = getEnd(query, "ORDER BY", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "LIMIT", i, end) > 0) {
-                end = getEnd(query, "LIMIT", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "OFFSET", i, end) > 0) {
-                end = getEnd(query, "OFFSET", i, end);
-                break;
-            }
-        }
+        ArrayList<String> operators = new ArrayList<String>();
+        operators.add("GROUP BY");
+        operators.add("ORDER BY");
+        operators.add("LIMIT");
+        operators.add("OFFSET");
+        int start = getStartEnd2(query, "WHERE", operators)[0];
+        int end = getStartEnd2(query, "WHERE", operators)[1];
 
         if ((start > 0) && (start < end) && (query.substring(start, end).charAt(0) != ' ')) {
             return query.substring(start, end);
@@ -116,30 +100,12 @@ public class Parser {
     }
 
     static String getGroupExpression(String query) throws SyntaxError {
-        int start = 0;
-        int end = 0;
-
-        if (query.length() <= "SELECT".length()) {
-            throw new SyntaxError("Syntax error! Expected SELECT");
-        }
-        for (int i = 0; i < query.length(); i++) {
-            if (query.length() - i > "GROUP BY".length() && query.substring(i, i + "GROUP BY".length()).equals("GROUP BY")) {
-                start = i + "GROUP BY".length() + 1;
-            }
-
-            if (start > 0 && getEnd(query, "ORDER BY", i, end) > 0) {
-                end = getEnd(query, "ORDER BY", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "LIMIT", i, end) > 0) {
-                end = getEnd(query, "LIMIT", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "OFFSET", i, end) > 0) {
-                end = getEnd(query, "OFFSET", i, end);
-                break;
-            }
-        }
+        ArrayList<String> operators = new ArrayList<String>();
+        operators.add("ORDER BY");
+        operators.add("LIMIT");
+        operators.add("OFFSET");
+        int start = getStartEnd2(query, "GROUP BY", operators)[0];
+        int end = getStartEnd2(query, "GROUP BY", operators)[1];
 
         if ((start > 0) && (start < end) && (query.substring(start, end).charAt(0) != ' ')) {
             return query.substring(start, end);
@@ -153,26 +119,11 @@ public class Parser {
     }
 
     static String getOrderExpression(String query) throws SyntaxError {
-        int start = 0;
-        int end = 0;
-
-        if (query.length() <= "SELECT".length()) {
-            throw new SyntaxError("Syntax error! Expected SELECT");
-        }
-        for (int i = 0; i < query.length(); i++) {
-            if (query.length() - i > "ORDER BY".length() && query.substring(i, i + "ORDER BY".length()).equals("ORDER BY")) {
-                start = i + "ORDER BY".length() + 1;
-            }
-
-            if (start > 0 && getEnd(query, "LIMIT", i, end) > 0) {
-                end = getEnd(query, "LIMIT", i, end);
-                break;
-            }
-            if (start > 0 && getEnd(query, "OFFSET", i, end) > 0) {
-                end = getEnd(query, "OFFSET", i, end);
-                break;
-            }
-        }
+        ArrayList<String> operators = new ArrayList<String>();
+        operators.add("LIMIT");
+        operators.add("OFFSET");
+        int start = getStartEnd2(query, "ORDER BY", operators)[0];
+        int end = getStartEnd2(query, "ORDER BY", operators)[1];
 
         if ((start > 0) && (start < end) && (query.substring(start, end).charAt(0) != ' ')) {
             return query.substring(start, end);
@@ -186,19 +137,10 @@ public class Parser {
     }
 
     static String getLimitExpression(String query) throws SyntaxError {
-        int start = 0;
-        int end = 0;
-
-        for (int i = 0; i < query.length(); i++) {
-            if (query.length() - i > "LIMIT".length() && query.substring(i).startsWith("LIMIT")) {
-                start = i + "LIMIT".length() + 1;
-            }
-
-            if (start > 0 && getEnd(query, "OFFSET", i, end) > 0) {
-                end = getEnd(query, "OFFSET", i, end);
-                break;
-            }
-        }
+        ArrayList<String> operators = new ArrayList<String>();
+        operators.add("OFFSET");
+        int start = getStartEnd2(query, "LIMIT", operators)[0];
+        int end = getStartEnd2(query, "LIMIT", operators)[1];
 
         if ((start > 0) && (start < end) && (query.substring(start, end).charAt(0) != ' ')) {
             return query.substring(start, end);
@@ -212,22 +154,10 @@ public class Parser {
     }
 
     static String getOffsetExpression(String query) throws SyntaxError {
-        int start = 0;
-        int end = 0;
-
-        if (query.length() <= "SELECT".length()) {
-            throw new SyntaxError("Syntax error! Expected SELECT");
-        }
-        for (int i = 0; i < query.length(); i++) {
-            if (query.length() - i > "OFFSET".length() && query.substring(i, i + "OFFSET".length()).equals("OFFSET")) {
-                start = i + "OFFSET".length() + 1;
-            }
-
-            if (start > 0 && getEnd(query, "LIMIT", i, end) > 0) {
-                end = getEnd(query, "LIMIT", i, end);
-                break;
-            }
-        }
+        ArrayList<String> operators = new ArrayList<String>();
+        operators.add("LIMIT");
+        int start = getStartEnd2(query, "OFFSET", operators)[0];
+        int end = getStartEnd2(query, "OFFSET", operators)[1];
 
         if ((start > 0) && (start < end) && (query.substring(start, end).charAt(0) != ' ')) {
             return query.substring(start, end);

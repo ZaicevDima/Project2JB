@@ -13,15 +13,15 @@ public class Constructor {
             int start = 0;
             for (int i = 0; i < select.length(); i++) {
                 if (select.charAt(i) == ',') {
-                    if ((i - start > ", ".length()) && select.substring(start, start + 3).equals(",  ")) {
+                    if ((i - start > ", ".length()) && select.substring(start).startsWith(",  ")) {
                         throw new SyntaxError("Incorrect SELECT expression");
                     }
                     resultSelect.append(select, start, i).append(": 1");
                     start = i;
                 }
             }
-            if ((select.length() - start > ", ".length()) && select.substring(start, start + 3).equals(",  ") ||
-                    (select.substring(start).length() <= 2) && select.substring(start).charAt(0) == ',') {
+            if ((select.length() - start > ", ".length()) && select.substring(start).startsWith(",  ") ||
+                    (select.substring(start).length() <= 2) && select.substring(start).startsWith(",")) {
                 throw new SyntaxError("Incorrect SELECT expression");
             }
             resultSelect.append(select.substring(start)).append(": 1");
@@ -30,7 +30,7 @@ public class Constructor {
     }
 
     static String getFrom(String from) throws SyntaxError {
-        if ((from.charAt(0) != '"' || from.charAt(from.length() - 1) != '"') && from.contains(" ")) {
+        if ((from.charAt(0) != '"' || !from.endsWith("\"")) && from.contains(" ")) {
             throw new SyntaxError("Incorrect FROM");
         }
         return "db." + from;
@@ -106,6 +106,36 @@ public class Constructor {
         }
     }
 
+    private static int getAmountSpaces(String s) {
+        int counterSpace = 0;
+        boolean isFirstQuote = true;
+        for (int j = 0; j < s.length(); j++) {
+            if (s.charAt(j) == '\'' && isFirstQuote) {
+                isFirstQuote = false;
+            } else if (s.charAt(j) == '\'' && !isFirstQuote) {
+                isFirstQuote = true;
+            }
+            if (s.charAt(j) == ' ' && isFirstQuote) {
+                counterSpace++;
+            }
+        }
+        return counterSpace;
+    }
+
+    private static boolean isASC(String[] predicates) {
+        return !predicates[predicates.length - 1].equals("DESC");
+    }
+
+    private static StringBuilder getResultOrder(boolean isASC, String s, StringBuilder resultOrder, String[] predicates) {
+        if (isASC && !predicates[predicates.length - 1].equals("ASC")) {
+            resultOrder.append("{").append(s, 0, s.length()).append(": 1}, ");
+        } else if (predicates[predicates.length - 1].equals("ASC")) {
+            resultOrder.append("{").append(s, 0, s.length() - "ASC".length() - 1).append(": 1}, ");
+        } else {
+            resultOrder.append("{").append(s, 0, s.length() - "DESC".length() - 1).append(": -1}, ");
+        }
+        return resultOrder;
+    }
     static String getOrder(String order) throws SyntaxError {
         if (order.equals("")) {
             return "";
@@ -116,37 +146,15 @@ public class Constructor {
             if (s.charAt(0) == ' ') {
                 s = s.substring(1);
             }
-            boolean isFirstQuote = true;
-            int counterSpace = 0;
-
-            for (int j = 0; j < s.length(); j++) {
-                if (s.charAt(j) == '\'' && isFirstQuote) {
-                    isFirstQuote = false;
-                } else if (s.charAt(j) == '\'' && !isFirstQuote) {
-                    isFirstQuote = true;
-                }
-                if (s.charAt(j) == ' ' && isFirstQuote) {
-                    counterSpace++;
-                }
-            }
+            int counterSpace = getAmountSpaces(s);
 
             if (counterSpace > 1) {
                 throw new SyntaxError("Incorrect ORDER BY");
             }
 
-            boolean isASC = true;
             String[] predicates = s.split(" ");
-            if (predicates[predicates.length - 1].equals("DESC")) {
-                isASC = false;
-            }
-
-            if (isASC && !predicates[predicates.length - 1].equals("ASC")) {
-                resultOrder.append("{").append(s, 0, s.length()).append(": 1}, ");
-            } else if (predicates[predicates.length - 1].equals("ASC")) {
-                resultOrder.append("{").append(s, 0, s.length() - "ASC".length() - 1).append(": 1}, ");
-            } else {
-                resultOrder.append("{").append(s, 0, s.length() - "DESC".length() - 1).append(": -1}, ");
-            }
+            boolean isASC = isASC(predicates);
+            getResultOrder(isASC, s, resultOrder, predicates);
         }
         resultOrder.delete(resultOrder.length() - 2, resultOrder.length());
         return "sort(" + resultOrder.toString() + ")";

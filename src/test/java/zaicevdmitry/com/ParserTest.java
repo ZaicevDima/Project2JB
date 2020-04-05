@@ -8,7 +8,8 @@ public class ParserTest {
     @Test
     public void getSelectExpression() throws SyntaxError {
         String query = "SELECT * FROM table";
-        assertEquals("*", Parser.getSelectExpression(query));
+        assertEquals("*",
+                Parser.getSelectExpression(query));
     }
 
     @Test(expected = SyntaxError.class)
@@ -19,6 +20,11 @@ public class ParserTest {
     @Test(expected = SyntaxError.class)
     public void getSelectExpressionErrorSelect() throws SyntaxError {
         Parser.getSelectExpression("SELE");
+    }
+
+    @Test(expected = SyntaxError.class)
+    public void getSelectExpressionErrorTwoSelect() throws SyntaxError {
+        Parser.getSelectExpression("SELECT * SELECT FROM table");
     }
 
     @Test(expected = SyntaxError.class)
@@ -116,12 +122,6 @@ public class ParserTest {
         Parser.getWhereExpression(query);
     }
 
-    @Test(expected = SyntaxError.class)
-    public void getWhereExpressionSyntaxError() throws SyntaxError {
-        String query = "SE ";
-        Parser.getWhereExpression(query);
-    }
-
     @Test
     public void getGroupExpressionEmpty() throws SyntaxError {
         String query = "SELECT * FROM table ORDER BY id LIMIT 10 OFFSET 2";
@@ -158,12 +158,6 @@ public class ParserTest {
         Parser.getGroupExpression(query);
     }
 
-    @Test(expected = SyntaxError.class)
-    public void getGroupExpressionSyntaxError() throws SyntaxError {
-        String query = "SE ";
-        Parser.getGroupExpression(query);
-    }
-
     @Test
     public void getOrderExpressionEmpty() throws SyntaxError {
         String query = "SELECT * FROM table LIMIT 10 OFFSET 2";
@@ -194,12 +188,6 @@ public class ParserTest {
         Parser.getOrderExpression(query);
     }
 
-    @Test(expected = SyntaxError.class)
-    public void getOrderExpressionSyntaxError() throws SyntaxError {
-        String query = "SE ";
-        Parser.getOrderExpression(query);
-    }
-
     @Test
     public void getLimitExpressionEmpty() throws SyntaxError {
         String query = "SELECT * FROM table OFFSET 2";
@@ -223,13 +211,6 @@ public class ParserTest {
         String query = "SELECT * FROM  table LIMIT      OFFSET 2";
         Parser.getLimitExpression(query);
     }
-
-    @Test(expected = SyntaxError.class)
-    public void getLimitExpressionSyntaxError() throws SyntaxError {
-        String query = "SE ";
-        Parser.getLimitExpression(query);
-    }
-
 
     @Test
     public void getOffsetExpressionEmpty() throws SyntaxError {
