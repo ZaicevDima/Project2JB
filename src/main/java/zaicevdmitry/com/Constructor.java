@@ -92,7 +92,6 @@ public class Constructor {
         throw new SyntaxError("Incorrect WHERE predicate");
     }
 
-    /**
     static String getWhere(String where) throws SyntaxError {
 
         if (where.equals("")) {
