@@ -2,8 +2,17 @@ package zaicevdmitry.com;
 
 import java.util.ArrayList;
 
+/**
+ * Class for create part of mongo query
+ */
 public class Constructor {
 
+    /**
+     * Transform SQL SELECT part to mongo style
+     * @param select SELECT expression of SQL query
+     * @return expression in mongo style
+     * @throws SyntaxError if select expression is incorrect
+     */
     static String getSelect(String select) throws SyntaxError {
 
         if (select.equals("*")) {
@@ -29,6 +38,12 @@ public class Constructor {
         }
     }
 
+    /**
+     * Transform SQL FROM part to mongo style
+     * @param from from expression of SQL query
+     * @return expression in mongo style
+     * @throws SyntaxError if from expression is incorrect
+     */
     static String getFrom(String from) throws SyntaxError {
         if ((from.charAt(0) != '"' || !from.endsWith("\"")) && from.contains(" ")) {
             throw new SyntaxError("Incorrect FROM");
@@ -36,10 +51,21 @@ public class Constructor {
         return "db." + from;
     }
 
+    /**
+     * Checks that predicate is correct WHERE predicate
+     * @param predicate predicate of WHERE argument
+     * @return true if contains = or <> or > or <
+     */
     static boolean isCorrectWhere(String predicate) {
         return predicate.contains("=") ^ predicate.contains("<>") ^ (predicate.contains(">") ^ predicate.contains("<"));
     }
 
+    /**
+     * Transform SQL WHERE part to mongo style
+     * @param predicate WHERE expression of SQL query
+     * @return expression in mongo style
+     * @throws SyntaxError if WHERE expression is incorrect
+     */
     static String transformWherePredicate(String predicate) throws SyntaxError {
         if (predicate.contains("=") && (predicate.charAt(predicate.indexOf("=") - 1) == ' ') &&
                 predicate.charAt(predicate.indexOf("=") + 1) == ' ') {
@@ -66,6 +92,7 @@ public class Constructor {
         throw new SyntaxError("Incorrect WHERE predicate");
     }
 
+    /**
     static String getWhere(String where) throws SyntaxError {
 
         if (where.equals("")) {
